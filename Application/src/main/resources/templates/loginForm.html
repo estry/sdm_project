@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>로그인 화면</title>
+</head>
+<body>
+    <h3>로그인</h3>
+    <form name="form1" method="get" action="@{/authenticate}">
+		<table>
+    	<tr>
+        	<td>유저ID</td>
+        	<td><input type="text" name="id"></td>
+    	</tr>
+    	<tr>
+        	<td>패스워드</td>
+        	<td><input type="password" name="pw"></td>
+    	</tr>
+		</table>
+	<table>
+    	<tr>
+        	<td align="center"><input type="submit" value="로그인"></td>
+        	<td align="center"><input type="reset" value="리셋"></td>
+    	</tr>
+	</table>
+	</form>
+</body>
+</html>
