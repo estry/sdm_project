@@ -66,6 +66,32 @@ public class ApplicationService
 		 return "enrol success";
 			 
 	 }
+	 public String cancel(int classCode , String userID)   // 수강 취소 기능 
+	 {
+		 Student user = null;
+		 user = studentRepository.findByID(userID);
+		 if(user!=null)
+		 {
+			 List<Enrol> enrolList = enrolRepository.findAllByStudentCodeOrderByClassCode(user.getCode());
+			 for(int i=0;i<enrolList.size();i++)
+			 {
+				if(enrolList.get(i).getClassCode() == classCode)
+				{
+					Class target = classRepository.findByCode(classCode);
+					if(target == null)
+						return "수강 취소 실패 - 수업을 찾을 수 없음";
+					user.setPoint(user.getPoint() + target.getPoint());
+					target.setCurrent_num(target.getCurrent_num() - 1);
+					
+					enrolRepository.delete(enrolList.get(i));
+					studentRepository.saveAndFlush(user);   // 데이터베이스에 변경 사항 저장
+					classRepository.saveAndFlush(target);
+					return "수강 취소 성공";
+				}
+			 }
+		 }
+		 return "수강 취소 실패";
+	 }
 	 public List<Class> enrolClassList(String userID)
 	 {
 		 Student user = null;

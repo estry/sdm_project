@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -84,15 +85,22 @@ public class ServiceController {
 
 	
 	@RequestMapping(value = "/main/application/cancel", method = RequestMethod.GET) // 
-    public String cancelApplication (Principal principal, Model model) {
+    public String cancelApplication (String classCode , Principal principal, Model model) {
         // TODO implement here
 		String userID = principal.getName();
+		System.out.println("************************class code : "+ classCode);
+		int code = Integer.parseInt(classCode);
 		
+		
+		
+		String result = applicationService.cancel(code, userID);
+		
+        model.addAttribute("result",result);
 		int point = applicationService.getMyPoint(userID);
 		model.addAttribute("point",point);
 		List<Application.domain.model.Class> list = applicationService.enrolClassList(userID);
         model.addAttribute("list", list);
-        return "";
+        return "Application";
     }
 
     

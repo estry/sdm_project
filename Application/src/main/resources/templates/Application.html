@@ -11,15 +11,17 @@
 	<form name="form1" method="get" action="/main/application/submit">
 	<table>
     	<tr>
-    		<td>과목코드 입력</td>
+    		<td>과목코드 입력</td><input type=button value="뒤로 가기" OnClick="javascript:history.back(-1)">
         	<td><input type="text" name="code"></td>
         	<td><input type="submit" value="신청하기"></td>
         	<p>신청 결과 : [[${result}]]</p>
         	<th>내 잔여 학점 : [[${point}]]</th>
+        	
     	</tr>
 	</table>
 	</form>
 	
+	<h3>내 수강신청 목록</h3>
 	<form name="form2" method="get" action="/main/application/cancel">
 	<table>
 		 <thead>
@@ -30,18 +32,20 @@
               <th>     학과   </th>
               <th>    강의실   </th>
               <th>    학점   </th>
+              <input type = "text" name = "classCode"/>
+              <input type="submit" value="수강 취소">
               </tr>
           </thead>
           <tbody>
           	<tr th:each = "class : ${list}">
-          	
+          	  
         		<td>[[${class.name}]]</td>
                 <td>[[${class.code}]]</td>
                 <td>[[${class.p_name}]]</td>
                 <td>[[${class.dept}]]</td>
                 <td>[[${class.location}]]</td>
                 <td>[[${class.point}]]</td>
-                <td><input type="submit" value="취소하기"></td>
+       
             </tr>
           </tbody>
 	</table>
