@@ -24,7 +24,7 @@ public class Student {
     private String dept;
 
     //protected String schedule;   // 배열로 만들기 
-
+    
     private String ID;
 
     private String PW;
@@ -34,6 +34,7 @@ public class Student {
     private int grade;    // 학년 
     
     public Student() {
+    	
     }
 
     public int getPoint() {
@@ -99,5 +100,4 @@ public class Student {
 	public void setPW(String pW) {
 		PW = pW;
 	}
-
 }

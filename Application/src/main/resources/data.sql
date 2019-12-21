@@ -1,6 +1,7 @@
+
 -- 학생 더미데이터 
 INSERT INTO student (code , job , name , dept, ID, PW , grade , point)
-VALUES (201511286,'학생','이태선', '컴퓨터공학과','dlxotjs','0627',3 , 18);
+VALUES (201511286,'학생','이태선', '컴퓨터공학과','dlxotjs','0627',3 , 18 );
 INSERT INTO student (code , job , name , dept, ID, PW , grade , point)
 VALUES (201711278,'학생','김철수', '환경공학과','1111','1111',2 , 10);
 INSERT INTO student (code , job , name , dept, ID, PW , grade , point)

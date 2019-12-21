@@ -7,7 +7,7 @@
 <body>
 	<h3>메인 화면</h3>
 	<p>환영합니다. [[${user}]]님</p>
-	<p th:text = "${new java.util.Date().toString()}"></p>
+	<p th:text = "접속 시간 : ${new java.util.Date().toString()}"></p>
 	<form name="form1" method="get" action="/main/application">
 	<table>
     	<tr>

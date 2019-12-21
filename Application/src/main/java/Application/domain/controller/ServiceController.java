@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.NumberUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,23 +44,54 @@ public class ServiceController {
 	
 	
 	@RequestMapping(value = "/main/application", method = RequestMethod.GET) // 
-    public String applicationView() 
-	{	
-        return "Application";
-    }
-	@RequestMapping(value = "/main/application/{code}", method = RequestMethod.GET) // 
-    public String application(@PathVariable("code")int classCode,Principal principal) 
+    public String applicationView(Principal principal , Model model) 
 	{	
 		String userID = principal.getName();
-		System.out.println("userID : "+ userID);
-        applicationService.enrol(classCode, userID);
-        return "Application"; // + 시간표 
+		int point = applicationService.getMyPoint(userID);
+		model.addAttribute("point",point);
+        return "Application";
+    }
+	@RequestMapping(value = "/main/application/submit", method = RequestMethod.GET) // 
+    public String application(String code , Principal principal , Model model) 
+	{	
+		String userID = principal.getName();
+		//System.out.println("classCode : "+ code);
+		try {
+			int classCode = Integer.parseInt(code);
+			String result = applicationService.enrol(classCode, userID);
+		       
+	        if(result.contains("success"))
+	        	result = "수강 신청 성공";
+	        model.addAttribute("result",result);
+	        int point = applicationService.getMyPoint(userID);
+			model.addAttribute("point",point);
+	        List<Application.domain.model.Class> list = applicationService.enrolClassList(userID);
+	        model.addAttribute("list", list);
+	        return "Application"; // + 시간표 
+            
+        } catch (NumberFormatException e) {                             // 과목 코드란에 숫자가 아닌 다른 형식 입력했을때 catch 
+           String result = "잘못된 형식 입력 - 다시 입력하세요";
+           model.addAttribute("result",result);
+           int point = applicationService.getMyPoint(userID);
+			model.addAttribute("point",point);
+	        List<Application.domain.model.Class> list = applicationService.enrolClassList(userID);
+	        model.addAttribute("list", list);
+	        return "Application"; // + 시간표 
+        }
+		
+        
     }
 
 	
-	@RequestMapping(value = "/main/cancel", method = RequestMethod.GET) // 
-    public String cancelApplication () {
+	@RequestMapping(value = "/main/application/cancel", method = RequestMethod.GET) // 
+    public String cancelApplication (Principal principal, Model model) {
         // TODO implement here
+		String userID = principal.getName();
+		
+		int point = applicationService.getMyPoint(userID);
+		model.addAttribute("point",point);
+		List<Application.domain.model.Class> list = applicationService.enrolClassList(userID);
+        model.addAttribute("list", list);
         return "";
     }
 
@@ -93,7 +125,9 @@ public class ServiceController {
     public String loginSuccess(Model model,Principal principal)
     {
     	String userID = principal.getName();
-    	model.addAttribute("userName",userID);
+    	System.out.println("userID : "+ userID);
+    	model.addAttribute("user",userID);
     	return "main";
     }
+   
 }
