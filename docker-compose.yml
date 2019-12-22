@@ -1,20 +1,5 @@
 version: "3"
 services:
-  web:
-    # replace username/repo:tag with your name and image details
-    image: stellis001/sdm_mrs
-    deploy:
-      replicas: 3
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: 150M
-      restart_policy:
-        condition: on-failure
-    ports:
-      - "9000:9000"
-    networks:
-      - webnet
   visualizer:
     image: dockersamples/visualizer:stable
     ports:
@@ -26,5 +11,61 @@ services:
         constraints: [node.role == manager]
     networks:
       - webnet
+  elasticsearch:
+    image: elasticsearch:5.6-alpine
+    ports:
+      - "9200:9200"
+    volumes:
+    - "./jvm.options:/usr/share/elasticsearch/config/jvm.options"
+    elasticsearch:
+    image: elasticsearch:5.6-alpine
+    ports:
+      - "9200:9200"
+    volumes:
+    - "./jvm.options:/usr/share/elasticsearch/config/jvm.options"
+    deploy:
+      placement:
+        contraints: [node.role == manager]
+    network:
+      - webnet
+  kibana:
+    image: kibana:5.6
+    ports: 
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: "http://elasticsearch:9200"
+    depends_on:
+    - elasticsearch
+    deploy:
+      placement:
+        contraints: [node.role == manager]
+    network:
+     - webnet
+  fluentd:
+    image: stellis001/fluentd-elasticsearch:latest 
+    ports:
+      - "24224:24224"
+      - "24220:24220"
+    depends_on:
+    - elasticsearch
+    deploy:
+      mode: global
+    network:
+     - webnet
+  web:
+    # replace username/repo:tag with your name and image details
+    image: stellis001/sdm_mrs:latest
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 150M
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "9000:9000"
+    networks:
+      - webnet          
 networks:
   webnet:
