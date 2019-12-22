@@ -20,13 +20,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import Application.domain.model.Professor;
-import Application.domain.model.Student;
 import Application.domain.service.ApplicationService;
+import Application.domain.service.ClassSearchService;
 import Application.domain.service.ApplicationRule;
 import Application.domain.service.LoginService;
 import Application.domain.service.SignIn;
-
+import Application.domain.model.*;
+import Application.domain.model.Class;
 
 //@CrossOrigin(origins = {"*","http://221.155.56.120:8080" })   // 아직 제대로 안바꿈 
 @Controller
@@ -41,7 +41,8 @@ public class ServiceController {
     */
     @Autowired
     ApplicationService applicationService;
-    
+    @Autowired
+    ClassSearchService classSearchService;
 	
 	
 	@RequestMapping(value = "/main/application", method = RequestMethod.GET) // 
@@ -84,15 +85,11 @@ public class ServiceController {
     }
 
 	
-	@RequestMapping(value = "/main/application/cancel", method = RequestMethod.GET) // 
+	@RequestMapping(value = "/main/application/cancel", method = RequestMethod.GET) // 일단 구현 완료
     public String cancelApplication (String classCode , Principal principal, Model model) {
         // TODO implement here
 		String userID = principal.getName();
-		System.out.println("************************class code : "+ classCode);
 		int code = Integer.parseInt(classCode);
-		
-		
-		
 		String result = applicationService.cancel(code, userID);
 		
         model.addAttribute("result",result);
@@ -101,6 +98,69 @@ public class ServiceController {
 		List<Application.domain.model.Class> list = applicationService.enrolClassList(userID);
         model.addAttribute("list", list);
         return "Application";
+    }
+	@RequestMapping(value = "/main/classInfo", method = RequestMethod.GET) 
+	public String classInfoView()
+	{
+		return "classInfo";
+	}
+	
+	
+	
+	@RequestMapping(value = "/main/classInfo/search", method = RequestMethod.GET)    // 구현 완료 
+    public String classInfo (String type , String input , Model model) {
+        // TODO implement here
+		try {
+			
+		   if(type.equals("학과"))
+		   {
+			   List<Class> list = classSearchService.findAllClassByDept(input);
+			   if(list!=null)
+			   {
+				   model.addAttribute("result","검색 성공 = "+list.size()+"개 결과");
+				   model.addAttribute("list",list);
+			   }
+			   else 
+				   model.addAttribute("result","검색 실패 - 존재하지 않음");   
+		   }
+		   else if(type.equals("전체"))
+		   {
+			   List<Class> list = classSearchService.findAll();
+			   if(list!=null)
+			   {
+				   model.addAttribute("result","검색 성공 = "+list.size()+"개 결과");
+				   model.addAttribute("list",list);
+			   }
+			   else 
+				   model.addAttribute("result","검색 실패 - 존재하지 않음");   
+		   }
+		   else if(type.equals("코드"))
+		   {
+			   try {
+				   int code = Integer.parseInt(input);
+				   List<Class> list = classSearchService.findOne(code);
+				   if(list!=null)
+				   {
+					   model.addAttribute("result","검색 성공 = "+list.size()+"개 결과");
+					   model.addAttribute("list",list);
+				   }
+				   else 
+					   model.addAttribute("result","검색 실패 - 존재하지 않음");
+			   }
+			   catch (NumberFormatException e) {     
+				   model.addAttribute("result","잘못된 형식 입력- 다시 입력하세요");
+				   return "classInfo";
+			   }
+			   
+		   }
+		   return "classInfo";
+	        
+            
+        } catch (NumberFormatException e) {                             // 과목 코드란에 숫자가 아닌 다른 형식 입력했을때 catch 
+           String result = "잘못된 형식 입력 - 다시 입력하세요";
+           model.addAttribute("result",result);
+	       return "classInfo"; 
+        }
     }
 
     

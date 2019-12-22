@@ -27,6 +27,8 @@ public class ApplicationService
 	 @Autowired
 	 private EnrolRepository enrolRepository;
 	 
+	 
+	 @Transactional
 	 public String enrol(int classCode , String userID)
 	 {
 		 Class target = null;
@@ -66,6 +68,8 @@ public class ApplicationService
 		 return "enrol success";
 			 
 	 }
+	 
+	 @Transactional
 	 public String cancel(int classCode , String userID)   // 수강 취소 기능 
 	 {
 		 Student user = null;
@@ -92,6 +96,8 @@ public class ApplicationService
 		 }
 		 return "수강 취소 실패";
 	 }
+	 
+	 @Transactional
 	 public List<Class> enrolClassList(String userID)
 	 {
 		 Student user = null;

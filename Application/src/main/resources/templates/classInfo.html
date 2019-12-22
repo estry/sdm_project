@@ -8,14 +8,54 @@
 </head>
 <body>
 	<h3>강의 조회 화면</h3>
-	<form name="form1" method="get" action="/main/classInfo">
+	<div>
+		<a th:href="@{/main}">&lt; 메인화면으로 가기</a>
+	</div>
+	<form name="form1" method="get" action="/main/classInfo/search">
 	<table>
+		<select id = "type" name = "type">
+				<option value = "전체">전체 조회</option>
+				<option value = "학과">학과별 조회</option>
+				<option value = "코드">강의코드 조회</option>
+		</select>
     	<tr>
-    		<td>과목코드 입력</td><input type=button value="뒤로 가기" OnClick="javascript:history.back(-1)">
-        	<td><input type="text" name="code"></td>
+        	<td><input type="text" name="input"></td>
         	<td><input type="submit" value="조회하기"></td>
     	</tr>
+    	<td>검색 결과 : [[${result}]]</td>
 	</table>
+	<table>
+		 <thead>
+              <tr>
+              <th>     수업 이름    </th>
+              <th>     수업 코드    </th>
+              <th>     수강 학년    </th>
+              <th>     교수 이름    </th>
+              <th>     학과        </th>
+              <th>     강의실       </th>
+              <th>     학점        </th>
+              <th>     제한 인원     </th>
+              <th>     현재 인원     </th>
+              </tr>
+          </thead>
+          <tbody>
+          	<tr th:each = "class : ${list}">
+          	  
+        		<td>[[${class.name}]]</td>
+                <td>[[${class.code}]]</td>
+                <td>[[${class.grade}]]</td>
+                <td>[[${class.p_name}]]</td>
+                <td>[[${class.dept}]]</td>
+                <td>[[${class.location}]]</td>
+                <td>[[${class.point}]]</td>
+       			<td>[[${class.limit_num}]]</td>
+       			<td>[[${class.current_num}]]</td>
+            </tr>
+          </tbody>
+	</table>
+	
+	
+	
 	</form>
 	
 	
