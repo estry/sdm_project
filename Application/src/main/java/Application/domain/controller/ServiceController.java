@@ -27,6 +27,8 @@ import Application.domain.service.LoginService;
 import Application.domain.service.SignIn;
 import Application.domain.model.*;
 import Application.domain.model.Class;
+import Application.domain.repository.ProfessorRepository;
+import Application.domain.repository.StudentRepository;
 
 //@CrossOrigin(origins = {"*","http://221.155.56.120:8080" })   // 아직 제대로 안바꿈 
 @Controller
@@ -43,12 +45,17 @@ public class ServiceController {
     ApplicationService applicationService;
     @Autowired
     ClassSearchService classSearchService;
-	
+    @Autowired
+    StudentRepository StudentRepository;
+    @Autowired
+    ProfessorRepository ProfessorRepository;
 	
 	@RequestMapping(value = "/main/application", method = RequestMethod.GET) // 
     public String applicationView(Principal principal , Model model) 
 	{	
 		String userID = principal.getName();
+		List<Application.domain.model.Class> list = applicationService.enrolClassList(userID);
+        model.addAttribute("list", list);
 		int point = applicationService.getMyPoint(userID);
 		model.addAttribute("point",point);
         return "Application";
@@ -89,15 +96,27 @@ public class ServiceController {
     public String cancelApplication (String classCode , Principal principal, Model model) {
         // TODO implement here
 		String userID = principal.getName();
-		int code = Integer.parseInt(classCode);
-		String result = applicationService.cancel(code, userID);
 		
-        model.addAttribute("result",result);
-		int point = applicationService.getMyPoint(userID);
-		model.addAttribute("point",point);
-		List<Application.domain.model.Class> list = applicationService.enrolClassList(userID);
-        model.addAttribute("list", list);
-        return "Application";
+		try {
+			int code = Integer.parseInt(classCode);
+			String result = applicationService.cancel(code, userID);
+		
+			model.addAttribute("result",result);
+			int point = applicationService.getMyPoint(userID);
+			model.addAttribute("point",point);
+			List<Application.domain.model.Class> list = applicationService.enrolClassList(userID);
+        	model.addAttribute("list", list);
+        	return "Application";
+		}
+		catch (NumberFormatException e) {                             // 과목 코드란에 숫자가 아닌 다른 형식 입력했을때 catch 
+	           String result = "잘못된 형식 입력 - 다시 입력하세요";
+	           model.addAttribute("result",result);
+	           int point = applicationService.getMyPoint(userID);
+			   model.addAttribute("point",point);
+		       List<Application.domain.model.Class> list = applicationService.enrolClassList(userID);
+		       model.addAttribute("list", list);
+		       return "Application"; // + 시간표 
+	    }
     }
 	@RequestMapping(value = "/main/classInfo", method = RequestMethod.GET) 
 	public String classInfoView()
@@ -192,9 +211,22 @@ public class ServiceController {
     @RequestMapping(value = "/main", method = RequestMethod.GET)   // ok
     public String loginSuccess(Model model,Principal principal)
     {
+    	// 이름 출력하는 걸로 바꿈 
     	String userID = principal.getName();
-    	System.out.println("userID : "+ userID);
-    	model.addAttribute("user",userID);
+    	Student s = StudentRepository.findByID(userID);
+    	Professor p = ProfessorRepository.findByID(userID);
+    	if(s!= null)
+    	{
+    		String userName = s.getName();
+    		System.out.println("userName : "+ userName);
+    		model.addAttribute("user",userName);
+    	}
+    	else if(s==null && p != null)
+    	{
+    		String userName = p.getName() + " 교수";
+    		System.out.println("userName : "+ userName);
+    		model.addAttribute("user",userName);
+    	}
     	return "main";
     }
    

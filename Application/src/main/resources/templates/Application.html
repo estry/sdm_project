@@ -8,16 +8,27 @@
 </head>
 <body>
 	<h3>수강신청 화면</h3>
+	<form name="form3" method="get" action="/logout">
+	<table>
+    	<tr>
+    		<div>
+				<a th:href="@{/main}" style="color: blue">&lt; 메인화면으로 가기</a>
+				<a th:href="@{/main/classInfo}" style="color: blue">| 강의 조회하기&gt;</a>
+			</div>
+        	<td><input type="submit" value="로그아웃"></td>
+    	</tr>
+	</table>
+	</form>
+	
+	
 	<form name="form1" method="get" action="/main/application/submit">
 	<table>
     	<tr>
     		<td>과목코드 입력</td>
-    		<div>
-				<a th:href="@{/main}">&lt; 메인화면으로 가기</a>
-			</div>
+    		
 			
         	<td><input type="text" name="code"></td>
-        	<td><input type="submit" value="신청하기"></td>
+        	<td><input type="submit" value="신청하기" style="color: blue"></td>
         	<p>신청 결과 : [[${result}]]</p>
         	<th>내 잔여 학점 : [[${point}]]</th>
         	
@@ -36,8 +47,9 @@
               <th>     학과        </th>
               <th>     강의실       </th>
               <th>     학점        </th>
+              <th>     현재인원/제한인원        </th>
               <input type = "text" name = "classCode"/>
-              <input type="submit" value="수강 취소">
+              <input type="submit" value="수강 취소" style="color: red">
               </tr>
           </thead>
           <tbody>
@@ -49,12 +61,13 @@
                 <td>[[${class.dept}]]</td>
                 <td>[[${class.location}]]</td>
                 <td>[[${class.point}]]</td>
+                <td>[[${class.current_num}]]/[[${class.limit_num}]]</td>
        
             </tr>
           </tbody>
 	</table>
 	</form>
-
+	
 	
 </body>
 </html>
