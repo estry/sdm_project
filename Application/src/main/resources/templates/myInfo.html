@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th = "http://www.thymeleaf.org">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>Insert title here</title>
+</head>
+<body>
+	<h3>내 정보 화면</h3>
+	<form name="form1" method="get" action="/main">
+	<table>
+    	<tr>
+    		<td><input type="submit" value="메인으로 가기"></td>
+			<thead>
+              <tr>
+              <th>     이름    </th>
+              <th>     학년    </th>
+              <th>     학번    </th>
+              <th>     ID     </th>
+              <th>     PW     </th>
+              <th>     학과        </th>
+              <th>     잔여학점        </th>
+              <input type = "text" name = "classCode"/>
+              <input type="submit" value="수강 취소">
+              </tr>
+          </thead>
+          <tbody>
+          	<tr th:each = "class : ${list}">
+          	  
+        		<td>[[${class.name}]]</td>
+                <td>[[${class.code}]]</td>
+                <td>[[${class.p_name}]]</td>
+                <td>[[${class.dept}]]</td>
+                <td>[[${class.location}]]</td>
+                <td>[[${class.point}]]</td>
+       
+            </tr>
+          </tbody>
+        	
+        	
+    	</tr>
+	</table>
+	</form>
+	
+	
+	
+</body>
+</html>
