@@ -17,16 +17,10 @@ services:
       - "9200:9200"
     volumes:
     - "./jvm.options:/usr/share/elasticsearch/config/jvm.options"
-    elasticsearch:
-    image: elasticsearch:5.6-alpine
-    ports:
-      - "9200:9200"
-    volumes:
-    - "./jvm.options:/usr/share/elasticsearch/config/jvm.options"
     deploy:
       placement:
-        contraints: [node.role == manager]
-    network:
+        constraints: [node.role == manager]
+    networks:
       - webnet
   kibana:
     image: kibana:5.6
@@ -38,8 +32,8 @@ services:
     - elasticsearch
     deploy:
       placement:
-        contraints: [node.role == manager]
-    network:
+        constraints: [node.role == manager]
+    networks:
      - webnet
   fluentd:
     image: stellis001/fluentd-elasticsearch:latest 
@@ -50,7 +44,7 @@ services:
     - elasticsearch
     deploy:
       mode: global
-    network:
+    networks:
      - webnet
   web:
     # replace username/repo:tag with your name and image details
