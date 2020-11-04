@@ -1,5 +1,5 @@
 # sdm_project
-Repository for my lecture project
+
 실행 파일 이름 변경하면 실행 안될 수도 있음 
 가급적이면 그대로 사용하시기 바랍니다.
 
